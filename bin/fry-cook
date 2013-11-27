@@ -1,0 +1,69 @@
+#!/usr/bin/env ruby
+
+require "fry_cook/version"
+require "chef_zero/version"
+require "fry_cook/server"
+require "optparse"
+
+options = {}
+fry_options = {}
+
+OptionParser.new do |opts|
+  opts.banner = "Usage: fry-cook [ARGS]"
+
+  opts.on("-H", "--host HOST", "Host to bind to (default: 127.0.0.1)") do |value|
+    options[:host] = value
+  end
+  opts.on("-p", "--port PORT", Integer, "Port to listen on (default: 8889)") do |value|
+    options[:port] = value
+  end
+  opts.on("--socket PATH", String, "Unix socket path to listen on") do |value|
+    options[:socket] = value
+  end
+  opts.on("-d", "--daemon", "Run as a daemon process") do |value|
+    options[:daemon] = value
+  end
+
+  opts.on("--path PATH", String, "A working copy of the chef-repo to build from (default: .)") do |value|
+    fry_options[:working_path] = value
+  end
+
+  opts.on("--remote GIT_REMOTE", String, "A git remote to build from") do |value|
+    fry_options[:git_repo_remote] = value
+  end
+
+  opts.on("--track GIT_REF", String, "The branch (or other ref) to track in the git remote (default: master)") do |value|
+    fry_options[:git_ref] = value
+  end
+
+  opts.on("--storage-path PATH", String, "Where to store the files the server works from (default: {working_path}/.fry-cook") do |value|
+    fry_options[:storgate_path] = value
+  end
+
+  opts.on("-l", "--log-level LEVEL", "Set the output log level") do |value|
+    options[:log_level] = value
+  end
+
+  opts.on_tail("-h", "--help", "Show this message") do
+    puts opts
+    exit
+  end
+
+  opts.on_tail("--version", "Show version") do
+    puts "fry-cook-#{FryCook::VERSION}, chef-zero-#{ChefZero::VERSION}"
+    exit
+  end
+end.parse!
+
+server = FryCook::Server.new(options, fry_options)
+
+if options[:daemon]
+  unless Process.respond_to?('daemon')
+    abort 'Process.deamon requires Ruby >= 1.9'
+  else
+    Process.daemon(true)
+    server.start(:publish => true)
+  end
+else
+  server.start(:publish => true)
+end
