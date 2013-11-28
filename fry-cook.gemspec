@@ -14,6 +14,7 @@ Gem::Specification.new do |s|
 
   s.add_dependency "chef", "~> 11"
   s.add_dependency "chef-zero", "~> 1.7"
+  s.add_dependency "berkshelf", "~> 2"
 
   %w(rspec-core rspec-expectations rspec-mocks).each { |gem| s.add_development_dependency gem, "~> 2.13.0" }
 

@@ -37,7 +37,7 @@ OptionParser.new do |opts|
   end
 
   opts.on("--storage-path PATH", String, "Where to store the files the server works from (default: {working_path}/.fry-cook") do |value|
-    fry_options[:storgate_path] = value
+    fry_options[:storage_path] = value
   end
 
   opts.on("-l", "--log-level LEVEL", "Set the output log level") do |value|
