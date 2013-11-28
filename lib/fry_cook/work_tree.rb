@@ -1,5 +1,7 @@
 require 'chef/chef_fs/chef_fs_data_store'
 require 'chef/chef_fs/config'
+require 'chef/role'
+require 'chef/environment'
 require 'fileutils'
 require 'json'
 require 'berkshelf'
@@ -109,17 +111,29 @@ module FryCook
 
     def install_environments(new_version, source_path, install_path)
       FileUtils.mkdir_p("#{install_path}/environments")
-      environments = Dir.glob("#{source_path}/environments/*.{rb,json}")
+      environments = Dir.glob("#{source_path}/environments/*.json")
       if !environments.empty?
         FileUtils.cp(environments, "#{install_path}/environments")
+      end
+      Dir.glob("#{source_path}/environments/*.rb").each do |environment|
+        environment_obj = Chef::Environment.new
+        environment_obj.name File.basename(environment, ".rb")
+        environment_obj.from_file(environment)
+        File.write("#{install_path}/environments/#{File.basename(environment, ".rb")}.json", environment_obj.to_json)
       end
     end
 
     def install_roles(new_version, source_path, install_path)
       FileUtils.mkdir_p("#{install_path}/roles")
-      roles = Dir.glob("#{source_path}/roles/*.{rb,json}")
+      roles = Dir.glob("#{source_path}/roles/*.json")
       if !roles.empty?
         FileUtils.cp(roles, "#{install_path}/roles")
+      end
+      Dir.glob("#{source_path}/roles/*.rb").each do |role|
+        role_obj = Chef::Role.new
+        role_obj.name File.basename(role, ".rb")
+        role_obj.from_file(role)
+        File.write("#{install_path}/roles/#{File.basename(role, ".rb")}.json", role_obj.to_json)
       end
     end
 
