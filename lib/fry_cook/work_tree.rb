@@ -88,7 +88,7 @@ module FryCook
           git_in(source_path, "checkout", "-f", @git_ref)
         end
       when :path
-        new_version = "build-" + Time.now.to_i
+        new_version = "build-#{Time.now.to_i}"
         source_path = @working_path
       end
       return new_version, source_path
