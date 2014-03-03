@@ -11,7 +11,7 @@ module FryCook
       end
 
       config_attr :repo_path
-      config_attr :repo_git_ref
+      config_attr :repo_git_remote
       config_attr :repo_git_track, "master"
       config_attr :prefix, "default"
       config_attr :server_port, 18998

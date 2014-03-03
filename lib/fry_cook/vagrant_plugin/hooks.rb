@@ -19,7 +19,7 @@ module FryCook::VagrantPlugin::Hooks
     end
 
     def active?
-      client_config.any? && config.repo_path || config.repo_git_ref
+      client_config.any? && config.repo_path || config.repo_git_remote
     end
 
     def host_ip_address
@@ -85,8 +85,8 @@ module FryCook::VagrantPlugin::Hooks
         case
         when config.repo_path
           fry_options[:working_path] = config.repo_path
-        when config.repo_git_ref
-          fry_options[:git_repo_remote] = config.repo_git_ref
+        when config.repo_git_remote
+          fry_options[:git_repo_remote] = config.repo_git_remote
           fry_options[:git_ref] = config.repo_git_track
         end
 
