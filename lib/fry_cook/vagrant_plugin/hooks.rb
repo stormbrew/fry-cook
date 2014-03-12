@@ -11,7 +11,7 @@ module FryCook::VagrantPlugin::Hooks
     end
 
     def config
-      @env[:global_config].fry_cook
+      @env[:machine].config.fry_cook
     end
 
     def client_config

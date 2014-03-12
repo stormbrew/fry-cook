@@ -100,7 +100,7 @@ module FryCook
         # Note: Doesn't work properly without being in the directory of the berksfile.
         Dir.chdir(source_path) do
           berksfile = Berkshelf::Berksfile.from_file("Berksfile")
-          berksfile.install(path: "#{install_path}/cookbooks")
+          berksfile.vendor("#{install_path}/cookbooks")
         end
       when File.directory?("#{source_path}/cookbooks")
         FileUtils.cp_r("#{source_path}/cookbooks", "#{install_path}/cookbooks")
@@ -159,7 +159,6 @@ module FryCook
       install_path = File.expand_path("#{@storage_path}/#{new_version}")
 
       if force || new_version != old_version
-          
         begin
           install_cookbooks(new_version, source_path, install_path)
           install_environments(new_version, source_path, install_path)
